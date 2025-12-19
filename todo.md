@@ -3,6 +3,7 @@ Armoured Manager - Gerenciador de Veiículos Blindados
 # Tarefas
 - [ ] Configurar ambiente de desenvolvimento
 - [ ] Criar modelo de dados para veículos blindados
+- [ ] Criar Models e Serializers no Django
 - [ ] Desenvolver API RESTful para gerenciamento de veículos
 - [ ] Implementar autenticação de usuários
 - [ ] Implementar interface de usuário para cadastro e consulta de veículos
