@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from vehicles.models import Vehicle
 from django.views.decorators.csrf import csrf_exempt
-import json
 from django.core import serializers
+from django.utils import timezone
+from vehicles.models import Vehicle
+import json
 
 # TODO - TECNICAMENTE OS DOIS ESTÃO FUNCIONANDO, MAS CONTINUAR PARA CRIAR OBJETOS E RECUPERAR ELES DIREITO
 
@@ -37,21 +38,26 @@ def create(request):
   return HttpResponse(content="Created successfully!", status=200)
 
 #* UPDATE BY ID
-def update(request):
+@csrf_exempt
+def update(request, id):
   
   if request.method == 'POST':
+  
     json_data = json.loads(request.body)
-    
-    id = json_data.get("pk")
     
     if not id:
       return HttpResponse(content="Error, ID not found", status=400)
     
-    vehicle = Vehicle.objects.get("id")
-    print(vehicle)
-  
+  # TODO - FUNCIONA, SÓ NÃO SEI SE FUNCIONA COMO DEVERIA, REVER ISSO
+    vehicle = Vehicle.objects.get(pk=id)
+    if Vehicle.objects.get(pk=id):
+      Vehicle.objects.filter(pk=json_data["pk"]).update(updated_at=timezone.now())
+      for key, value in json_data["fields"].items():
+        Vehicle.objects.filter(pk=json_data["pk"]).update(**{key: value})
+
+    print(json_data)
+
   return HttpResponse(content="Done!")
-    # TODO - PAREI AQUI, NÃO SEI SE A ROTA FUNCIONA
     
 #* GET BY ID
 
