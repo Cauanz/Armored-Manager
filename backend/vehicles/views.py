@@ -65,8 +65,9 @@ def get_by_id(request, id):
   return HttpResponse(content=vehicle, status=200)
 
 
-
+# TODO - ESSA NÃO FUNCIONA
 #* DELETE ONE BY ID
+@csrf_exempt
 def delete_by_id(request, id):
   
   if request.method == "DELETE":
@@ -80,7 +81,6 @@ def delete_by_id(request, id):
     
   return HttpResponse(content="Error", status=400)
 
-# TODO - TESTAR AS DUAS ROTAS
     
 
 #* DELETE ALL
