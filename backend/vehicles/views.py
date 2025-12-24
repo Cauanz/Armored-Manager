@@ -49,23 +49,39 @@ def update(request, id):
       return HttpResponse(content="Error, ID not found", status=400)
     
   # TODO - FUNCIONA, SÓ NÃO SEI SE FUNCIONA COMO DEVERIA, REVER ISSO
-    vehicle = Vehicle.objects.get(pk=id)
     if Vehicle.objects.get(pk=id):
       Vehicle.objects.filter(pk=json_data["pk"]).update(updated_at=timezone.now())
       for key, value in json_data["fields"].items():
         Vehicle.objects.filter(pk=json_data["pk"]).update(**{key: value})
 
-    print(json_data)
-
-  return HttpResponse(content="Done!")
+  return HttpResponse(content="Done!", status=200)
     
 #* GET BY ID
-
+def get_by_id(request, id):
+  
+  if request.method == "GET":
+    vehicle = Vehicle.objects.get(pk=id)
+    
+  return HttpResponse(content=vehicle, status=200)
 
 
 
 #* DELETE ONE BY ID
+def delete_by_id(request, id):
+  
+  if request.method == "DELETE":
+    vehicle = Vehicle.objects.get(pk=id)
+    
+    if vehicle:
+      vehicle = Vehicle.objects.delete(pk=id)
+      return HttpResponse(content="Done.", status=200)
+    
+    return HttpResponse(content="Not found", status=404)
+    
+  return HttpResponse(content="Error", status=400)
 
+# TODO - TESTAR AS DUAS ROTAS
+    
 
 #* DELETE ALL
 
