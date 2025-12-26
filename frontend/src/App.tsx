@@ -9,7 +9,7 @@ interface Vehicle {
     model: string;
     vehicle_type: string;
     status: string;
-    max_speed: string;
+    max_speed: number;
     armor: string;
     armor_level: number;
     created_at: string;
@@ -25,8 +25,8 @@ function App() {
   const [open, setModalOpen] = useState(false);
   const [currentVehicle, setCurrentVehicle] = useState({});
   const handleModal = (open: boolean, vehicle: object) => {
-    setModalOpen(open)
-    setCurrentVehicle(vehicle)
+    setModalOpen(open);
+    setCurrentVehicle(vehicle);
   };
   const handleModalClose = () => setModalOpen(false);
 
@@ -62,27 +62,36 @@ function App() {
     return <h1>Loading...</h1>;
   }
 
-  console.log(currentVehicle)
+  console.log(currentVehicle);
 
   // TODO - PROBLEMAS, MODAL NÃO FUNCIONA, E NÃO SEI SE TUDO DEPOIS DISSO TAMBÉM FUNCIONA
 
   return (
     <>
       <div className="content">
-        <AltModal open={open} handleModalClose={handleModalClose} vehicle={currentVehicle} />
+        <AltModal
+          open={open}
+          handleModalClose={handleModalClose}
+          vehicle={currentVehicle}
+        />
 
         <ul>
           {vehicles ? (
             vehicles.map((vehicle: Vehicle) => (
-              <li key={vehicle.pk}>
-                <p>{vehicle.fields.name}</p>
-                <p>{vehicle.fields.model}</p>
-                <p>{vehicle.fields.status}</p>
-                <p>{vehicle.fields.armor}</p>
-                <p>{vehicle.fields.armor_level}</p>
-                <p>{vehicle.fields.max_speed}</p>
-                <button onClick={() => handleModal(!open, vehicle)}>
-                  Open Modal
+              <li key={vehicle.pk} className="vehicle-item">
+                <div className="vehicle-info">
+                  <strong>{vehicle.fields.name}</strong> —{" "}
+                  {vehicle.fields.model}
+                  <div>Status: {vehicle.fields.status}</div>
+                  <div>
+                    Armor: {vehicle.fields.armor} (Level{" "}
+                    {vehicle.fields.armor_level})
+                  </div>
+                  <div>Max Speed: {vehicle.fields.max_speed}</div>
+                  <div>Vehicle Type: {vehicle.fields.vehicle_type}</div>
+                </div>
+                <button onClick={() => handleModal(true, vehicle)}>
+                  Editar
                 </button>
               </li>
             ))
