@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-
+import AltModal from "./components/AltModal";
 interface Vehicle {
   pk: number;
   model: string;
@@ -21,6 +21,14 @@ function App() {
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const [open, setModalOpen] = useState(false);
+  const [currentVehicle, setCurrentVehicle] = useState({});
+  const handleModal = (open: boolean, vehicle: object) => {
+    setModalOpen(open)
+    setCurrentVehicle(vehicle)
+  };
+  const handleModalClose = () => setModalOpen(false);
 
   useEffect(() => {
     const fetchVehicles = async () => {
@@ -54,20 +62,33 @@ function App() {
     return <h1>Loading...</h1>;
   }
 
+  console.log(currentVehicle)
+
+  // TODO - PROBLEMAS, MODAL NÃO FUNCIONA, E NÃO SEI SE TUDO DEPOIS DISSO TAMBÉM FUNCIONA
+
   return (
     <>
       <div className="content">
+        <AltModal open={open} handleModalClose={handleModalClose} vehicle={currentVehicle} />
+
         <ul>
-          {vehicles.map((vehicle: Vehicle) => (
-            <li key={vehicle.pk}>
-              <p>{vehicle.fields.name}</p>
-              <p>{vehicle.fields.model}</p>
-              <p>{vehicle.fields.status}</p>
-              <p>{vehicle.fields.armor}</p>
-              <p>{vehicle.fields.armor_level}</p>
-              <p>{vehicle.fields.max_speed}</p>
-            </li>
-          ))}
+          {vehicles ? (
+            vehicles.map((vehicle: Vehicle) => (
+              <li key={vehicle.pk}>
+                <p>{vehicle.fields.name}</p>
+                <p>{vehicle.fields.model}</p>
+                <p>{vehicle.fields.status}</p>
+                <p>{vehicle.fields.armor}</p>
+                <p>{vehicle.fields.armor_level}</p>
+                <p>{vehicle.fields.max_speed}</p>
+                <button onClick={() => handleModal(!open, vehicle)}>
+                  Open Modal
+                </button>
+              </li>
+            ))
+          ) : (
+            <h1>No vehicles were found!</h1>
+          )}
         </ul>
       </div>
     </>
