@@ -49,6 +49,8 @@ def update(request, id):
     try:
       json_data = json.loads(request.body)
       
+      print(json_data)
+      
       if not id:
         return HttpResponse(content="Error, ID not found", status=404)
       
@@ -71,8 +73,8 @@ def update(request, id):
       
 
       return HttpResponse(content="Updated!", status=200)
-    except:
-      return HttpResponse(content="Not found", status=404) 
+    except Exception as E:
+      return HttpResponse(content=E, status=404) 
 
 
 #* GET BY ID

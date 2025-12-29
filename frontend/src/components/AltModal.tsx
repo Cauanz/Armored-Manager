@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 // import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
+import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 
 const style = {
@@ -41,7 +42,6 @@ export default function AltModal({
   open,
   handleModalClose,
 }: ModalProps) {
-
   const [name, setName] = useState("");
   const [model, setModel] = useState("");
   const [status, setStatus] = useState("");
@@ -51,13 +51,13 @@ export default function AltModal({
   const [maxSpeed, setMaxSpeed] = useState(0);
 
   useEffect(() => {
-      setName(vehicle?.fields?.name || "");
-      setModel(vehicle?.fields?.model || "");
-      setStatus(vehicle?.fields?.status || "");
-      setArmor(vehicle?.fields?.armor || "");
-      setArmorLevel(vehicle?.fields?.armor_level || 0);
-      setVehicleType(vehicle?.fields?.vehicle_type || "");
-      setMaxSpeed(vehicle?.fields?.max_speed || 0);
+    setName(vehicle?.fields?.name || "");
+    setModel(vehicle?.fields?.model || "");
+    setStatus(vehicle?.fields?.status || "");
+    setArmor(vehicle?.fields?.armor || "");
+    setArmorLevel(vehicle?.fields?.armor_level || 0);
+    setVehicleType(vehicle?.fields?.vehicle_type || "");
+    setMaxSpeed(vehicle?.fields?.max_speed || 0);
   }, [vehicle]);
 
   // const name = useMemo(() => (vehicle ? vehicle.fields?.name : ""), [vehicle]);
@@ -86,13 +86,28 @@ export default function AltModal({
   //   [vehicle]
   // );
 
-
   const submitForm = (e) => {
-    e.preventDefault()
-    console.log(name, model, status, armor, armorLevel, vehicleType, maxSpeed)
-  }
+    e.preventDefault();
+    console.log(name, model, status, armor, armorLevel, vehicleType, maxSpeed);
 
-// TODO - NÃO URGENTE, MAS ARRUMAR OS ESTILOS UM POUCO
+    const updatedVehicle = {
+      name,
+      model,
+      status,
+      armor,
+      armorLevel,
+      vehicleType,
+      maxSpeed
+    }
+
+    // TODO - TUDO TECNICAMENTE FUNCIONANDO, MAS ELE ESTÁ DANDO "NOT FOUND" PARA O ID ENVIADO POR ALGUM MOTIVO
+    axios.post(`http://localhost:8000/vehicles/update/${vehicle.pk}/`, 
+      updatedVehicle
+    ).then((res) => console.log(res))
+    .catch((err) => console.log(err))
+  };
+
+  // TODO - NÃO URGENTE, MAS ARRUMAR OS ESTILOS UM POUCO
 
   return (
     <div>
@@ -128,20 +143,41 @@ export default function AltModal({
               value={model}
               onChange={(e) => setModel(e.target.value)}
             />
-            <input
+            <select
+              name="statusSel"
+              id="statusSel"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+            >
+              <option value="active">Active</option>
+              <option value="damaged">Damaged</option>
+              <option value="destroyed">Destroyed</option>
+              <option value="maintenance">Maintenance</option>
+            </select>
+            {/* <input
               type="text"
               name="statusField"
               id="statusField"
               value={status}
               onChange={(e) => setStatus(e.target.value)}
-            />
-            <input
+            /> */}
+            <select
+              name="armorSel"
+              id="armorSel"
+              value={armor}
+              onChange={(e) => setArmor(e.target.value)}
+            >
+              <option value="light">Light</option>
+              <option value="medium">Medium</option>
+              <option value="Heavy">Heavy</option>
+            </select>
+            {/* <input
               type="text"
               name="armorField"
               id="armorField"
               value={armor}
               onChange={(e) => setArmor(e.target.value)}
-            />
+            /> */}
             <input
               type="number"
               name="armorLvlField"
@@ -151,13 +187,25 @@ export default function AltModal({
               max={100}
               onChange={(e) => setArmorLevel(e.target.value)}
             />
-            <input
+            <select
+              name="vehicleTypeSel"
+              id="vehicleTypeSel"
+              value={vehicleType}
+              onChange={(e) => setVehicleType(e.target.value)}
+            >
+              <option value="tank">Tank</option>
+              <option value="car">Car</option>
+              <option value="apc">APC</option>
+              <option value="ifv">IFV</option>
+              <option value="other">Other</option>
+            </select>
+            {/* <input
               type="text"
               name="vehicleTypeField"
               id="vehicleTypeField"
               value={vehicleType}
               onChange={(e) => setVehicleType(e.target.value)}
-            />
+            /> */}
             <input
               type="number"
               name="maxSpeedField"
