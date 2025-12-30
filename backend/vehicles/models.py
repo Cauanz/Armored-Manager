@@ -58,7 +58,7 @@ class VehicleLog(models.Model):
 		on_delete=models.CASCADE,
   	related_name="logs"
 	)
-  old_status = models.CharField(max_length=20)
+  old_status = models.CharField(max_length=20, null=True, default="New")
   new_status = models.CharField(max_length=20)
   description = models.TextField(blank=True)
   created_at = models.DateTimeField(auto_now_add=True)

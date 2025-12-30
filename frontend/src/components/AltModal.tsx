@@ -50,6 +50,9 @@ export default function AltModal({
   const [vehicleType, setVehicleType] = useState("");
   const [maxSpeed, setMaxSpeed] = useState(0);
 
+  const [event, setEvent] = useState("");
+  const [description, setDescription] = useState("");
+
   useEffect(() => {
     setName(vehicle?.fields?.name || "");
     setModel(vehicle?.fields?.model || "");
@@ -91,13 +94,17 @@ export default function AltModal({
     console.log(name, model, status, armor, armorLevel, vehicleType, maxSpeed);
 
     const updatedVehicle = {
-      name,
-      model,
-      status,
-      armor,
-      armorLevel,
-      vehicleType,
-      maxSpeed
+      fields: {
+        name,
+        model,
+        status,
+        armor,
+        armorLevel,
+        vehicleType,
+        maxSpeed
+      },
+      event: event,
+      eventDescription: description
     }
 
     // TODO - TUDO TECNICAMENTE FUNCIONANDO, MAS ELE ESTÁ DANDO "NOT FOUND" PARA O ID ENVIADO POR ALGUM MOTIVO
@@ -107,8 +114,7 @@ export default function AltModal({
     .catch((err) => console.log(err))
   };
 
-  // TODO - NÃO URGENTE, MAS ARRUMAR OS ESTILOS UM POUCO
-
+  // TODO - NÃO URGENTE, ARRUMAR OS ESTILOS UM POUCO
   return (
     <div>
       {/* <Button onClick={open}>Open modal</Button> */}
@@ -161,6 +167,25 @@ export default function AltModal({
               value={status}
               onChange={(e) => setStatus(e.target.value)}
             /> */}
+
+            <input
+              type="text"
+              name="description"
+              id="description"
+              placeholder="Descrição do evento"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+
+            <input
+              type="text"
+              name="event"
+              id="event"
+              placeholder="Evento"
+              value={event}
+              onChange={(e) => setEvent(e.target.value)}
+            />
+
             <select
               name="armorSel"
               id="armorSel"

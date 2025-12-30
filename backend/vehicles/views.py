@@ -14,14 +14,13 @@ def index(request):
   return HttpResponse(vehicles_json)
 
 
-# TODO - LEMBRAR NO FRONT TEMOS QUE LIMITAR AS OPÇÕES DISPONIVEIS NOS CAMPOS COM CHOICE
 @csrf_exempt
 def create(request):
   # TODO - TALVEZ TAMBÉM ADICIONAR VERIFICAÇÃO DE AUTENTICAÇÃO MAIS TARDE E ALGO QUE INCREMENTE QUANTIDADE QUANDO REGISTROS IGUAIS PARA EVITAR 40 VEICULOS IGUAIS TOMANDO LUGAR (OU NÃO)
   if request.method == 'POST':
     try:
       data = request.POST
-      json_data = json.loads(request.body)
+      json_data = json.loads(request.body.decode('utf-8'))
       
       new_tank = Vehicle.objects.create(
         name = json_data.get('name'),
@@ -33,14 +32,19 @@ def create(request):
         armor_level = json_data.get('armorLevel'),
       )
       new_tank.save()
-    except:
-      return HttpResponse(content="An error occurred when creating adding a new vehicle", status=404) 
+      
+      new_log = VehicleLog.objects.create(
+        vehicle = new_tank,
+        description = "New vehicle added to the fleet",
+        old_status = None,
+        new_status = json_data.get('status')
+      )
+      
+      return HttpResponse(content="Created successfully!", status=200)
+    except Exception as E:
+      return HttpResponse(content=f"An error occurred when creating a new vehicle, {E}", status=404) 
   
-  redirect("/vehicles/")
-  return HttpResponse(content="Created successfully!", status=200)
 
-#! LEMBRE DE FAZER ISSO:
-# TODO - LEMBRAR DE ADICIONAR OS DOIS CAMPOS ADICIONAIS NO FRONT PARA ENVIAR EVENT E EVENT_DESCRIPTION SOBRE OQUE OCORREU COM VEICULO
 #* UPDATE BY ID
 @csrf_exempt
 def update(request, id):
@@ -48,26 +52,28 @@ def update(request, id):
   if request.method == 'POST':
   
     try:
-      json_data = json.loads(request.body)      
+      json_data = json.loads(request.body.decode('utf-8'))
       
       if not id:
         return HttpResponse(content="Error, ID not found", status=404)
       
-      if Vehicle.objects.get(pk=id):
-        vehicle = Vehicle.objects.get(pk=id)
+      vehicle = Vehicle.objects.get(pk=id)
+      
+      if vehicle:
         old_status = vehicle.status
         
         Vehicle.objects.filter(pk=id).update(updated_at=timezone.now())
-        
-        for key, value in json_data.items():
+        for key, value in json_data['fields'].items():
           Vehicle.objects.filter(pk=id).update(**{key: value})
         
-        VehicleLog.objects.create(
+        updated_log = VehicleLog.objects.filter(vehicle=id).update(
           vehicle = vehicle,
-            description = "Placeholder",
-            old_status = old_status,
-            new_status = json_data.get("status", old_status)
+          description = "Placeholder",
+          old_status = old_status,
+          new_status = json_data['fields'].get("status", old_status)
         )
+        # TODO - NÃO ESTÁ ATUALIZANDO VEHICLELOG
+        # TODO - FALTA ADICIONAR CAMPO EVENT_DESCRIPTION AO DB E AQUI (NA ATUALIZAÇÃO, PORQUE ELE JÁ VEM NO OBJETO MAS NÃO É USADO)
 
       return HttpResponse(content="Updated!", status=200)
     except Exception as E:
