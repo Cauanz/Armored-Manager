@@ -39,6 +39,7 @@ def create(request):
   redirect("/vehicles/")
   return HttpResponse(content="Created successfully!", status=200)
 
+#! LEMBRE DE FAZER ISSO:
 # TODO - LEMBRAR DE ADICIONAR OS DOIS CAMPOS ADICIONAIS NO FRONT PARA ENVIAR EVENT E EVENT_DESCRIPTION SOBRE OQUE OCORREU COM VEICULO
 #* UPDATE BY ID
 @csrf_exempt
@@ -47,34 +48,30 @@ def update(request, id):
   if request.method == 'POST':
   
     try:
-      json_data = json.loads(request.body)
-      
-      print(json_data)
+      json_data = json.loads(request.body)      
       
       if not id:
         return HttpResponse(content="Error, ID not found", status=404)
-      
       
       if Vehicle.objects.get(pk=id):
         vehicle = Vehicle.objects.get(pk=id)
         old_status = vehicle.status
         
-        Vehicle.objects.filter(pk=json_data["pk"]).update(updated_at=timezone.now())
+        Vehicle.objects.filter(pk=id).update(updated_at=timezone.now())
         
-        for key, value in json_data["fields"].items():
-          Vehicle.objects.filter(pk=json_data["pk"]).update(**{key: value})
+        for key, value in json_data.items():
+          Vehicle.objects.filter(pk=id).update(**{key: value})
         
         VehicleLog.objects.create(
           vehicle = vehicle,
             description = "Placeholder",
             old_status = old_status,
-            new_status = json_data["fields"]["status"]
+            new_status = json_data.get("status", old_status)
         )
-      
 
       return HttpResponse(content="Updated!", status=200)
     except Exception as E:
-      return HttpResponse(content=E, status=404) 
+      return HttpResponse(content=E, status=404)
 
 
 #* GET BY ID
