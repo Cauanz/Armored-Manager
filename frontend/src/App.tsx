@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import AltModal from "./components/AltModal";
+import LogFrame from "./components/LogFrame";
 interface Vehicle {
   pk: number;
   model: string;
@@ -24,7 +25,7 @@ function App() {
 
   const [open, setModalOpen] = useState(false);
   const [currentVehicle, setCurrentVehicle] = useState({});
-  const handleModal = (open: boolean, vehicle: object) => {
+  const handleModal = (open: boolean, vehicle: Vehicle) => {
     setModalOpen(open);
     setCurrentVehicle(vehicle);
   };
@@ -52,6 +53,11 @@ function App() {
       }
     };
 
+    const fetchLogs = async () => {
+      // TODO - FAZER A CHAMADA A ROTA DOS LOGS E ENVIAR PARA O COMPONENTE
+      //TODO - (LEMBRAR QUE ELE TEM QUE CHAMAR DE NOVO TODA VEZ QUE UMA ALTERAÇÃO É FEITA NO VEICULO PARA ATULIZAR OS LOGS)
+    }
+
     fetchVehicles();
   }, []);
 
@@ -74,6 +80,8 @@ function App() {
           handleModalClose={handleModalClose}
           vehicle={currentVehicle}
         />
+
+        <LogFrame />
 
         <ul>
           {vehicles ? (
@@ -100,6 +108,8 @@ function App() {
           )}
         </ul>
       </div>
+
+      <p>Happy New Year, Spark :)</p>
     </>
   );
 }

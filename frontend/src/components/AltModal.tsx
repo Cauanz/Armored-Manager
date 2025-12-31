@@ -1,20 +1,57 @@
 import Box from "@mui/material/Box";
-// import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import axios from "axios";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 const style = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: 420,
   bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
+  borderRadius: 4,
+  boxShadow: 8,
   p: 4,
-  color: "black",
+  color: "#222",
+  border: "none",
+  outline: "none",
+};
+
+const formStyle: React.CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  gap: "18px",
+  marginTop: "18px",
+};
+
+const inputStyle: React.CSSProperties = {
+  padding: "10px 12px",
+  borderRadius: "6px",
+  border: "1px solid #ccc",
+  fontSize: "1rem",
+  background: "#f7f7f7",
+  color: "#222",
+  outline: "none",
+  transition: "border 0.2s",
+};
+
+const selectStyle: React.CSSProperties = {
+  ...inputStyle,
+  background: "#f7f7f7",
+};
+
+const submitStyle: React.CSSProperties = {
+  background: "#1976d2",
+  color: "#fff",
+  border: "none",
+  borderRadius: "6px",
+  padding: "12px 0",
+  fontWeight: 600,
+  fontSize: "1.1rem",
+  cursor: "pointer",
+  marginTop: "10px",
+  transition: "background 0.2s",
 };
 
 interface ModalProps {
@@ -63,35 +100,8 @@ export default function AltModal({
     setMaxSpeed(vehicle?.fields?.max_speed || 0);
   }, [vehicle]);
 
-  // const name = useMemo(() => (vehicle ? vehicle.fields?.name : ""), [vehicle]);
-  // const model = useMemo(
-  //   () => (vehicle ? vehicle.fields?.model : ""),
-  //   [vehicle]
-  // );
-  // const status = useMemo(
-  //   () => (vehicle ? vehicle.fields?.status : ""),
-  //   [vehicle]
-  // );
-  // const armor = useMemo(
-  //   () => (vehicle ? vehicle.fields?.armor : ""),
-  //   [vehicle]
-  // );
-  // const armorLevel = useMemo(
-  //   () => (vehicle ? vehicle.fields?.armor_level : 0),
-  //   [vehicle]
-  // );
-  // const vehicleType = useMemo(
-  //   () => (vehicle ? vehicle.fields?.vehicle_type : ""),
-  //   [vehicle]
-  // );
-  // const maxSpeed = useMemo(
-  //   () => (vehicle ? vehicle.fields?.max_speed : 0),
-  //   [vehicle]
-  // );
-
   const submitForm = (e) => {
     e.preventDefault();
-    console.log(name, model, status, armor, armorLevel, vehicleType, maxSpeed);
 
     const updatedVehicle = {
       fields: {
@@ -99,25 +109,25 @@ export default function AltModal({
         model,
         status,
         armor,
-        armorLevel,
-        vehicleType,
-        maxSpeed
+        armor_level: armorLevel,
+        vehicle_type: vehicleType,
+        max_speed: maxSpeed,
       },
       event: event,
-      eventDescription: description
-    }
+      eventDescription: description,
+    };
 
-    // TODO - TUDO TECNICAMENTE FUNCIONANDO, MAS ELE ESTÁ DANDO "NOT FOUND" PARA O ID ENVIADO POR ALGUM MOTIVO
-    axios.patch(`http://localhost:8000/vehicles/update/${vehicle.pk}/`, 
-      updatedVehicle
-    ).then((res) => console.log(res))
-    .catch((err) => console.log(err))
+    axios
+      .patch(
+        `http://localhost:8000/vehicles/update/${vehicle.pk}/`,
+        updatedVehicle
+      )
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   };
 
-  // TODO - NÃO URGENTE, ARRUMAR OS ESTILOS UM POUCO
   return (
     <div>
-      {/* <Button onClick={open}>Open modal</Button> */}
       <Modal
         open={open}
         onClose={handleModalClose}
@@ -125,19 +135,23 @@ export default function AltModal({
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <h1>Editar {name}</h1>
-          {/* <p>{name}</p>
-          <p>{model}</p>
-          <p>{status}</p>
-          <p>{armor}</p>
-          <p>{armorLevel}</p>
-          <p>{vehicleType}</p>
-          <p>{maxSpeed}</p> */}
+          <h2
+            style={{
+              margin: 0,
+              fontWeight: 700,
+              fontSize: "1.5rem",
+              textAlign: "center",
+            }}
+          >
+            Editar {name}
+          </h2>
 
-          <form>
+          <form style={formStyle}>
             <input
               type="text"
               name="nameField"
+              style={inputStyle}
+              placeholder="Nome"
               id="nameField"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -145,12 +159,15 @@ export default function AltModal({
             <input
               type="text"
               name="modelField"
+              style={inputStyle}
+              placeholder="Modelo"
               id="modelField"
               value={model}
               onChange={(e) => setModel(e.target.value)}
             />
             <select
               name="statusSel"
+              style={selectStyle}
               id="statusSel"
               value={status}
               onChange={(e) => setStatus(e.target.value)}
@@ -160,34 +177,30 @@ export default function AltModal({
               <option value="destroyed">Destroyed</option>
               <option value="maintenance">Maintenance</option>
             </select>
-            {/* <input
-              type="text"
-              name="statusField"
-              id="statusField"
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-            /> */}
-
-            <input
-              type="text"
-              name="description"
-              id="description"
-              placeholder="Descrição do evento"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
 
             <input
               type="text"
               name="event"
-              id="event"
+              style={inputStyle}
               placeholder="Evento"
+              id="event"
               value={event}
               onChange={(e) => setEvent(e.target.value)}
             />
 
+            <input
+              type="text"
+              name="description"
+              style={inputStyle}
+              placeholder="Descrição do evento"
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+
             <select
               name="armorSel"
+              style={selectStyle}
               id="armorSel"
               value={armor}
               onChange={(e) => setArmor(e.target.value)}
@@ -196,16 +209,12 @@ export default function AltModal({
               <option value="medium">Medium</option>
               <option value="Heavy">Heavy</option>
             </select>
-            {/* <input
-              type="text"
-              name="armorField"
-              id="armorField"
-              value={armor}
-              onChange={(e) => setArmor(e.target.value)}
-            /> */}
+
             <input
               type="number"
               name="armorLvlField"
+              style={inputStyle}
+              placeholder="Nível da blindagem"
               id="armorLvlField"
               value={armorLevel}
               min={0}
@@ -214,6 +223,7 @@ export default function AltModal({
             />
             <select
               name="vehicleTypeSel"
+              style={selectStyle}
               id="vehicleTypeSel"
               value={vehicleType}
               onChange={(e) => setVehicleType(e.target.value)}
@@ -224,23 +234,24 @@ export default function AltModal({
               <option value="ifv">IFV</option>
               <option value="other">Other</option>
             </select>
-            {/* <input
-              type="text"
-              name="vehicleTypeField"
-              id="vehicleTypeField"
-              value={vehicleType}
-              onChange={(e) => setVehicleType(e.target.value)}
-            /> */}
+
             <input
               type="number"
               name="maxSpeedField"
+              style={inputStyle}
+              placeholder="Velocidade máxima"
               id="maxSpeedField"
               value={maxSpeed}
               min={0}
               onChange={(e) => setMaxSpeed(e.target.value)}
             />
 
-            <input type="submit" value="Confirmar" onClick={submitForm} />
+            <input
+              type="submit"
+              value="Confirmar"
+              style={submitStyle}
+              onClick={submitForm}
+            />
           </form>
         </Box>
       </Modal>

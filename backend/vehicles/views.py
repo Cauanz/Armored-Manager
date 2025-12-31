@@ -67,15 +67,12 @@ def update(request, id):
         Vehicle.objects.filter(pk=id).update(**{key: value})
       Vehicle.objects.filter(pk=id).update(updated_at=timezone.now())
       
-      print(VehicleLog.objects.filter(vehicle=vehicle))
-      updated_log = VehicleLog.objects.filter(vehicle=vehicle).update(
+      updated_log = VehicleLog.objects.filter(vehicle=vehicle).create(
         vehicle = vehicle,
         description = json_data['eventDescription'],
         old_status = old_status,
         new_status = json_data['fields'].get("status")
       )
-      # TODO - AINDA NÃO ESTÁ ATUALIZANDO VEHICLELOG
-      # TODO - FALTA ADICIONAR CAMPO EVENT_DESCRIPTION AO DB E AQUI (NA ATUALIZAÇÃO, PORQUE ELE JÁ VEM NO OBJETO MAS NÃO É USADO)
 
       return HttpResponse(content="Updated!", status=200)
     except Exception as E:
