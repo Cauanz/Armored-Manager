@@ -49,7 +49,7 @@ def create(request):
 @csrf_exempt
 def update(request, id):
   
-  if request.method == 'POST':
+  if request.method == 'PATCH':
   
     try:
       json_data = json.loads(request.body.decode('utf-8'))
@@ -57,27 +57,29 @@ def update(request, id):
       if not id:
         return HttpResponse(content="Error, ID not found", status=404)
       
-      vehicle = Vehicle.objects.get(pk=id)
+      try:
+        vehicle = Vehicle.objects.get(pk=id)
+      except Vehicle.DoesNotExist:
+        return HttpResponse(content="Vehicle not found", status=404)
       
-      if vehicle:
-        old_status = vehicle.status
-        
-        Vehicle.objects.filter(pk=id).update(updated_at=timezone.now())
-        for key, value in json_data['fields'].items():
-          Vehicle.objects.filter(pk=id).update(**{key: value})
-        
-        updated_log = VehicleLog.objects.filter(vehicle=id).update(
-          vehicle = vehicle,
-          description = "Placeholder",
-          old_status = old_status,
-          new_status = json_data['fields'].get("status", old_status)
-        )
-        # TODO - NÃO ESTÁ ATUALIZANDO VEHICLELOG
-        # TODO - FALTA ADICIONAR CAMPO EVENT_DESCRIPTION AO DB E AQUI (NA ATUALIZAÇÃO, PORQUE ELE JÁ VEM NO OBJETO MAS NÃO É USADO)
+      old_status = vehicle.status
+      for key, value in json_data['fields'].items():
+        Vehicle.objects.filter(pk=id).update(**{key: value})
+      Vehicle.objects.filter(pk=id).update(updated_at=timezone.now())
+      
+      print(VehicleLog.objects.filter(vehicle=vehicle))
+      updated_log = VehicleLog.objects.filter(vehicle=vehicle).update(
+        vehicle = vehicle,
+        description = json_data['eventDescription'],
+        old_status = old_status,
+        new_status = json_data['fields'].get("status")
+      )
+      # TODO - AINDA NÃO ESTÁ ATUALIZANDO VEHICLELOG
+      # TODO - FALTA ADICIONAR CAMPO EVENT_DESCRIPTION AO DB E AQUI (NA ATUALIZAÇÃO, PORQUE ELE JÁ VEM NO OBJETO MAS NÃO É USADO)
 
       return HttpResponse(content="Updated!", status=200)
     except Exception as E:
-      return HttpResponse(content=E, status=404)
+      return HttpResponse(content=str(E), status=404)
 
 
 #* GET BY ID

@@ -108,7 +108,7 @@ export default function AltModal({
     }
 
     // TODO - TUDO TECNICAMENTE FUNCIONANDO, MAS ELE ESTÁ DANDO "NOT FOUND" PARA O ID ENVIADO POR ALGUM MOTIVO
-    axios.post(`http://localhost:8000/vehicles/update/${vehicle.pk}/`, 
+    axios.patch(`http://localhost:8000/vehicles/update/${vehicle.pk}/`, 
       updatedVehicle
     ).then((res) => console.log(res))
     .catch((err) => console.log(err))
