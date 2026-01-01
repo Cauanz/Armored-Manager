@@ -1,7 +1,52 @@
+import React, { useEffect, useState } from "react";
 
-export default function LogFrame({props}) {
+const frameStyle: React.CSSProperties = {
+  height: "100%",
+  width: "100%",
+  overflow: "scroll",
+};
+
+const logsDivStyle: React.CSSProperties = {
+  width: "100%",
+  height: "120px",
+  padding: "10px",
+  backgroundColor: "gray",
+  border: "1px solid black",
+  borderRadius: "10px"
+};
+
+export default function LogFrame({ logs }) {
+  const [logObjs, setLogObjs] = useState([]);
+
+  useEffect(() => {
+    setLogObjs(logs || []);
+  }, [logs]);
+
+  // useEffect(() => {
+
+  //   const fetchLogs = async () => {
+  //     return
+  //   }
+
+  //   fetchLogs();
+  // })
+
   return (
-    <div>LogFrame</div>
-    // TODO - FAZER O COMPONENTE DE LOGS, QUE É BASICAMENTE UM FRAME COM LOGS (NA MINHA CABEÇA, PODE FAZER DIFERENTE)
-  )
+    <>
+      <div className="frame" style={frameStyle}>
+        {logs ? (
+          logs.map((log) => (
+            <div className="log" style={logsDivStyle} key={log.pk}>
+              <p>Description: {log.fields.description}</p>
+              <p>New Status: {log.fields.new_status}</p>
+              <p>Old Status: {log.fields.old_status}</p>
+              <p>Date: {new Date(log.fields.created_at).toLocaleString()}</p>
+            </div>
+          ))
+        ) : (
+          <h1>There aren't any logs</h1>
+        )}
+      </div>
+    </>
+  );
 }

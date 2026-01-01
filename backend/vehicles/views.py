@@ -67,6 +67,9 @@ def update(request, id):
         Vehicle.objects.filter(pk=id).update(**{key: value})
       Vehicle.objects.filter(pk=id).update(updated_at=timezone.now())
       
+      #TODO - ADICIONAR EVENT_DESCRIPTION, QUE É DIFERENTE DE DESCRIPTION
+      #TODO - DESCRIPTION É PARA EVENTOS DE MUDANÇA, COMO "STATUS MUDOU DE X PARA X"
+      #TODO - ENQUANTO EVENT_DESCRIPTION É PARA EVENTOS QUE OCORRERAM COM O VEICULO
       updated_log = VehicleLog.objects.filter(vehicle=vehicle).create(
         vehicle = vehicle,
         description = json_data['eventDescription'],

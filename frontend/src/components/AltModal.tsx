@@ -78,6 +78,8 @@ export default function AltModal({
   vehicle,
   open,
   handleModalClose,
+  onVehicleChanged,
+  onVehicleChangedLogs,
 }: ModalProps) {
   const [name, setName] = useState("");
   const [model, setModel] = useState("");
@@ -122,7 +124,12 @@ export default function AltModal({
         `http://localhost:8000/vehicles/update/${vehicle.pk}/`,
         updatedVehicle
       )
-      .then((res) => console.log(res))
+      .then((res) => {
+        // console.log(res);
+        onVehicleChanged();
+        onVehicleChangedLogs();
+        handleModalClose();
+      })
       .catch((err) => console.log(err));
   };
 
