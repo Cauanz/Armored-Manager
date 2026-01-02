@@ -28,6 +28,7 @@ ENV/
 media/
 staticfiles/
 # Ignore compiled migration files but keep actual migrations
+**/migrations/
 **/migrations/*.pyc
 **/migrations/__pycache__/
 local_settings.py
