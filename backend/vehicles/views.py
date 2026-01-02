@@ -70,9 +70,15 @@ def update(request, id):
       #TODO - ADICIONAR EVENT_DESCRIPTION, QUE É DIFERENTE DE DESCRIPTION
       #TODO - DESCRIPTION É PARA EVENTOS DE MUDANÇA, COMO "STATUS MUDOU DE X PARA X"
       #TODO - ENQUANTO EVENT_DESCRIPTION É PARA EVENTOS QUE OCORRERAM COM O VEICULO
+      # TODO - E CRIAR UMA FORMA PARA QUE TODOS SEMPRE TENHAM ALGO, TIPO O DESCRIPTION TENHA "CREATE OU ALGO ASSIM" SE NÃO DA ERRO NO DB
+      
+      description = f"Status changed from {old_status} to {json_data['status']}"
+      
       updated_log = VehicleLog.objects.filter(vehicle=vehicle).create(
         vehicle = vehicle,
-        description = json_data['eventDescription'],
+        description = description,
+        event = json_data['event'],
+        event_description = json_data['description'],
         old_status = old_status,
         new_status = json_data['fields'].get("status")
       )

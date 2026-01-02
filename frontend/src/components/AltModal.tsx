@@ -116,7 +116,7 @@ export default function AltModal({
         max_speed: maxSpeed,
       },
       event: event,
-      eventDescription: description,
+      eventDescription: description
     };
 
     axios
@@ -125,7 +125,6 @@ export default function AltModal({
         updatedVehicle
       )
       .then((res) => {
-        // console.log(res);
         onVehicleChanged();
         onVehicleChangedLogs();
         handleModalClose();

@@ -60,6 +60,7 @@ class VehicleLog(models.Model):
 	)
   old_status = models.CharField(max_length=20, null=True, default="New")
   new_status = models.CharField(max_length=20)
+  event = models.CharField(max_length=20)
   description = models.TextField(blank=True)
   event_description = models.TextField(blank=True)
   created_at = models.DateTimeField(auto_now_add=True)
