@@ -108,10 +108,10 @@ function App() {
             <ul>
               {vehicles ? (
                 vehicles.map((vehicle: Vehicle) => (
-                  // TODO - FAZER PARA QUE A COR DO BACKGROUND SEJA DE ACORDO COM A SITUAÇÃO DO VEICULO
-                  <li key={vehicle.pk} className="vehicle-item">
+                  // TODO - MELHORAR O ESTILO DA TABELA
+                  <li key={vehicle.pk} className={`vehicle-item ${vehicle.fields.status}`}>
                     <div className="vehicle-info">
-                      <strong>{vehicle.fields.name}</strong> —{" "}
+                      <strong>{vehicle.fields.name}</strong> -{" "}
                       {vehicle.fields.model}
                       <div>Status: {vehicle.fields.status}</div>
                       <div>

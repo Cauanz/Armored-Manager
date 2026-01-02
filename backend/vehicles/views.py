@@ -33,9 +33,11 @@ def create(request):
       )
       new_tank.save()
       
+      description = f"New vehicle {json_data.get("name")} has been added with status: {json_data.get("status")}"
+      
       new_log = VehicleLog.objects.create(
         vehicle = new_tank,
-        description = "New vehicle added to the fleet",
+        description = description,
         old_status = None,
         new_status = json_data.get('status')
       )
@@ -67,18 +69,14 @@ def update(request, id):
         Vehicle.objects.filter(pk=id).update(**{key: value})
       Vehicle.objects.filter(pk=id).update(updated_at=timezone.now())
       
-      #TODO - ADICIONAR EVENT_DESCRIPTION, QUE É DIFERENTE DE DESCRIPTION
-      #TODO - DESCRIPTION É PARA EVENTOS DE MUDANÇA, COMO "STATUS MUDOU DE X PARA X"
-      #TODO - ENQUANTO EVENT_DESCRIPTION É PARA EVENTOS QUE OCORRERAM COM O VEICULO
-      # TODO - E CRIAR UMA FORMA PARA QUE TODOS SEMPRE TENHAM ALGO, TIPO O DESCRIPTION TENHA "CREATE OU ALGO ASSIM" SE NÃO DA ERRO NO DB
-      
-      description = f"Status changed from {old_status} to {json_data['status']}"
+      # TODO - MELHORAR ISSO PARA DETECTAR OQUE FOI MUDADO (PORQUE NEM SEMPRE É O STATUS)
+      description = f"Status changed from {old_status} to {json_data['fields'].get("status")}"
       
       updated_log = VehicleLog.objects.filter(vehicle=vehicle).create(
         vehicle = vehicle,
         description = description,
         event = json_data['event'],
-        event_description = json_data['description'],
+        event_description = json_data['eventDescription'],
         old_status = old_status,
         new_status = json_data['fields'].get("status")
       )
@@ -134,5 +132,5 @@ def delete_all(request):
 #* GET LOGS
 def get_logs(request):
   vehicles_json = serializers.serialize("json", VehicleLog.objects.all())
-  
+  print(vehicles_json)
   return HttpResponse(vehicles_json)

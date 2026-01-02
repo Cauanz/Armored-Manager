@@ -213,7 +213,7 @@ export default function AltModal({
             >
               <option value="light">Light</option>
               <option value="medium">Medium</option>
-              <option value="Heavy">Heavy</option>
+              <option value="heavy">Heavy</option>
             </select>
 
             <input

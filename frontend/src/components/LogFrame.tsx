@@ -8,12 +8,14 @@ const frameStyle: React.CSSProperties = {
 
 const logsDivStyle: React.CSSProperties = {
   width: "100%",
-  height: "120px",
+  height: "170px",
   padding: "10px",
   backgroundColor: "gray",
   border: "1px solid black",
   borderRadius: "10px"
 };
+
+// TODO - CRIAR UMA FORMA DELE "GRUDAR" NA PARTE INFERIOR E IR SEGUINDO OS LOGS MAIS ATUAIS, TIPO UM CHAT
 
 export default function LogFrame({ logs }) {
   const [logObjs, setLogObjs] = useState([]);
