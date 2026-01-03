@@ -4,6 +4,8 @@ const frameStyle: React.CSSProperties = {
   height: "100%",
   width: "100%",
   overflow: "scroll",
+  display: "flex",
+  flexDirection: "column-reverse",
 };
 
 const logsDivStyle: React.CSSProperties = {

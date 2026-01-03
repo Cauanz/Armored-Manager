@@ -131,6 +131,5 @@ def delete_all(request):
 
 #* GET LOGS
 def get_logs(request):
-  vehicles_json = serializers.serialize("json", VehicleLog.objects.all())
-  print(vehicles_json)
+  vehicles_json = serializers.serialize("json", VehicleLog.objects.all().order_by("created_at"))
   return HttpResponse(vehicles_json)

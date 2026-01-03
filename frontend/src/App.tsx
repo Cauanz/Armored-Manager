@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import AltModal from "./components/AltModal";
 import LogFrame from "./components/LogFrame";
+import { Input } from "@mui/material";
 interface Vehicle {
   pk: number;
   model: string;
@@ -42,7 +43,6 @@ function App() {
       }
 
       const data = await res.json();
-      console.log(data);
       setLogs(data);
       setError(null);
       setLoading(false);
@@ -62,6 +62,7 @@ function App() {
       }
 
       const data = await res.json();
+      console.log(data);
       setVehicles(data);
       setError(null);
       setLoading(false);
@@ -103,33 +104,42 @@ function App() {
           </div>
         </div>
 
+{/* //TODO - BOTÃO DE ADICIONAR NÃO FINALIZADO, E NÃO FUNCIONA APESAR DE MODAL ABRIR */}
+{/* //TODO - FAZER O MODAL PARA PODER SER USADO PARA CRIAÇÃO E ATUALIZAÇÃO */}
+        <input
+          type="button"
+          value="New"
+          className="newVehicleBtn"
+          onClick={() => handleModal(true, null)}
+        />
+
         <div className="bottomContent">
           <div className="table">
-            <ul>
-              {vehicles ? (
-                vehicles.map((vehicle: Vehicle) => (
-                  // TODO - MELHORAR O ESTILO DA TABELA
-                  <li key={vehicle.pk} className={`vehicle-item ${vehicle.fields.status}`}>
-                    <div className="vehicle-info">
-                      <strong>{vehicle.fields.name}</strong> -{" "}
-                      {vehicle.fields.model}
-                      <div>Status: {vehicle.fields.status}</div>
-                      <div>
-                        Armor: {vehicle.fields.armor} (Level{" "}
-                        {vehicle.fields.armor_level})
-                      </div>
-                      <div>Max Speed: {vehicle.fields.max_speed}</div>
-                      <div>Vehicle Type: {vehicle.fields.vehicle_type}</div>
+            {vehicles ? (
+              vehicles.map((vehicle: Vehicle) => (
+                <div
+                  key={vehicle.pk}
+                  className={`vehicle-item ${vehicle.fields.status}`}
+                >
+                  <div className="vehicle-info">
+                    <strong>{vehicle.fields.name}</strong> -{" "}
+                    {vehicle.fields.model}
+                    <div>Status: {vehicle.fields.status}</div>
+                    <div>
+                      Armor: {vehicle.fields.armor} (Level{" "}
+                      {vehicle.fields.armor_level})
                     </div>
-                    <button onClick={() => handleModal(true, vehicle)}>
-                      Editar
-                    </button>
-                  </li>
-                ))
-              ) : (
-                <h1>No vehicles were found!</h1>
-              )}
-            </ul>
+                    <div>Max Speed: {vehicle.fields.max_speed}</div>
+                    <div>Vehicle Type: {vehicle.fields.vehicle_type}</div>
+                  </div>
+                  <button onClick={() => handleModal(true, vehicle)}>
+                    Editar
+                  </button>
+                </div>
+              ))
+            ) : (
+              <h1>No vehicles were found!</h1>
+            )}
           </div>
         </div>
       </div>
