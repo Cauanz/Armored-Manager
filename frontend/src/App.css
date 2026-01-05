@@ -54,6 +54,7 @@
   display: grid;
   grid-template-columns: auto auto auto auto auto;
   padding: 10px;
+  overflow: scroll;
 }
 
 .vehicle-item {
@@ -67,26 +68,26 @@
 }
 
 .active {
-  background-color: green;
+  background-color: #008000;
 }
 
 .damaged {
-  background-color: rgba(185, 96, 13, 0.815);
+  background-color: #b9600dd0;
 }
 
 .destroyed {
-  background-color: red;
+  background-color: #ff0000;
 }
 
 .maintenance {
-  background-color: rgb(41, 161, 201);
+  background-color: #29a1c9;
 }
 
 .newVehicleBtn {
   width: 100px;
   height: 100px;
   position: absolute;
-  right: 100px;
+  right: 70px;
   bottom: 10px;
   padding: 20px;
   border-radius: 100px;

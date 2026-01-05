@@ -18,8 +18,8 @@ def index(request):
 def create(request):
   # TODO - TALVEZ TAMBÉM ADICIONAR VERIFICAÇÃO DE AUTENTICAÇÃO MAIS TARDE E ALGO QUE INCREMENTE QUANTIDADE QUANDO REGISTROS IGUAIS PARA EVITAR 40 VEICULOS IGUAIS TOMANDO LUGAR (OU NÃO)
   if request.method == 'POST':
+    
     try:
-      data = request.POST
       json_data = json.loads(request.body.decode('utf-8'))
 
       new_tank = Vehicle.objects.create(

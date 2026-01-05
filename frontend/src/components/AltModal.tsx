@@ -72,6 +72,7 @@ interface ModalProps {
   };
   open: boolean;
   handleModalClose: () => void;
+  mode: string
 }
 
 export default function AltModal({
@@ -153,8 +154,6 @@ export default function AltModal({
         .catch((err) => console.log(err));
     }
   };
-
-// TODO - OS VALORES "DEFAULT" DAS TAGS NÃO FUNCIONA, EU HARD-CODED ISSO DIRETOR NO OBJETO (REMOVA DAS TAGS OU FAÇA FUNCIONAR)
 
   return (
     <div>
@@ -334,7 +333,6 @@ export default function AltModal({
                 id="statusSel"
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
-                defaultValue={"active"}
               >
                 <option value="active">Active</option>
                 <option value="damaged">Damaged</option>
@@ -348,7 +346,6 @@ export default function AltModal({
                 id="armorSel"
                 value={armor}
                 onChange={(e) => setArmor(e.target.value)}
-                defaultValue={"light"}
               >
                 <option value="light">Light</option>
                 <option value="medium">Medium</option>
@@ -361,7 +358,6 @@ export default function AltModal({
                   type="number"
                   name="armorLvlField"
                   style={inputStyle}
-                  placeholder="Nível da blindagem"
                   id="armorLvlField"
                   value={armorLevel}
                   min={0}
@@ -376,7 +372,6 @@ export default function AltModal({
                 id="vehicleTypeSel"
                 value={vehicleType}
                 onChange={(e) => setVehicleType(e.target.value)}
-                defaultValue={"tank"}
               >
                 <option value="tank">Tank</option>
                 <option value="car">Car</option>
@@ -391,7 +386,6 @@ export default function AltModal({
                   type="number"
                   name="maxSpeedField"
                   style={inputStyle}
-                  placeholder="Velocidade máxima"
                   id="maxSpeedField"
                   value={maxSpeed}
                   min={0}

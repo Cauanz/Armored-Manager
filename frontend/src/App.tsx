@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import AltModal from "./components/AltModal";
 import LogFrame from "./components/LogFrame";
-import { Input } from "@mui/material";
+import axios from "axios";
+import Graph from "./components/Graph";
 interface Vehicle {
   pk: number;
   model: string;
@@ -28,12 +29,13 @@ function App() {
   const [open, setModalOpen] = useState(false);
   const [currentVehicle, setCurrentVehicle] = useState({});
   const [mode, setMode] = useState(null);
-  const handleModal = (open: boolean, vehicle: Vehicle, mode) => {
-    setMode(mode)
+  const handleModal = (open: boolean, vehicle: Vehicle, mode: null) => {
+    setMode(mode);
     setModalOpen(open);
     setCurrentVehicle(vehicle);
   };
   const handleModalClose = () => setModalOpen(false);
+
 
   const fetchLogs = async () => {
     try {
@@ -75,6 +77,26 @@ function App() {
     }
   };
 
+  const handleDelete = async (id) => {
+    try {
+      setLoading(true);
+      const res = axios.delete(`http://localhost:8000/vehicles/delete/${id}/`);
+
+      if (!res) {
+        throw new Error(`Request error! ${res}`);
+      }
+
+      setError(null);
+      setLoading(false);
+      fetchLogs();
+      fetchVehicles();
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchVehicles();
     fetchLogs();
@@ -100,20 +122,20 @@ function App() {
         />
 
         <div className="topContent">
-          <div className="graph"></div>
+          <div className="graph">
+            <Graph vehicles={vehicles} />
+          </div>
 
           <div className="frame">
             <LogFrame logs={logs} />
           </div>
         </div>
 
-{/* //TODO - BOTÃO DE ADICIONAR NÃO FINALIZADO, E NÃO FUNCIONA APESAR DE MODAL ABRIR */}
-{/* //TODO - FAZER O MODAL PARA PODER SER USADO PARA CRIAÇÃO E ATUALIZAÇÃO */}
         <input
           type="button"
           value="New"
           className="newVehicleBtn"
-          onClick={() => handleModal(true, null, 'new')}
+          onClick={() => handleModal(true, null, "new")}
         />
 
         <div className="bottomContent">
@@ -135,8 +157,11 @@ function App() {
                     <div>Max Speed: {vehicle.fields.max_speed}</div>
                     <div>Vehicle Type: {vehicle.fields.vehicle_type}</div>
                   </div>
-                  <button onClick={() => handleModal(true, vehicle, 'edit')}>
+                  <button onClick={() => handleModal(true, vehicle, "edit")}>
                     Editar
+                  </button>
+                  <button onClick={() => handleDelete(vehicle.pk)}>
+                    Deletar
                   </button>
                 </div>
               ))
