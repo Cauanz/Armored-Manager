@@ -80,6 +80,7 @@ export default function AltModal({
   handleModalClose,
   onVehicleChanged,
   onVehicleChangedLogs,
+  mode,
 }: ModalProps) {
   const [name, setName] = useState("");
   const [model, setModel] = useState("");
@@ -105,162 +106,304 @@ export default function AltModal({
   const submitForm = (e) => {
     e.preventDefault();
 
-    const updatedVehicle = {
-      fields: {
+    if (mode === "edit") {
+      const updatedVehicle = {
+        fields: {
+          name,
+          model,
+          status,
+          armor,
+          armor_level: armorLevel,
+          vehicle_type: vehicleType,
+          max_speed: maxSpeed,
+        },
+        event: event,
+        eventDescription: description,
+      };
+
+      axios
+        .patch(
+          `http://localhost:8000/vehicles/update/${vehicle.pk}/`,
+          updatedVehicle
+        )
+        .then((res) => {
+          onVehicleChanged();
+          onVehicleChangedLogs();
+          handleModalClose();
+        })
+        .catch((err) => console.log(err));
+    } else {
+      const newVehicle = {
         name,
         model,
-        status,
-        armor,
+        status: status || 'active',
+        armor: armor || 'light',
         armor_level: armorLevel,
-        vehicle_type: vehicleType,
+        vehicle_type: vehicleType || 'tank',
         max_speed: maxSpeed,
-      },
-      event: event,
-      eventDescription: description
-    };
+      };
 
-    axios
-      .patch(
-        `http://localhost:8000/vehicles/update/${vehicle.pk}/`,
-        updatedVehicle
-      )
-      .then((res) => {
-        onVehicleChanged();
-        onVehicleChangedLogs();
-        handleModalClose();
-      })
-      .catch((err) => console.log(err));
+      axios
+        .post(`http://localhost:8000/vehicles/create/`, newVehicle)
+        .then((res) => {
+          onVehicleChanged();
+          onVehicleChangedLogs();
+          handleModalClose();
+        })
+        .catch((err) => console.log(err));
+    }
   };
+
+// TODO - OS VALORES "DEFAULT" DAS TAGS NÃO FUNCIONA, EU HARD-CODED ISSO DIRETOR NO OBJETO (REMOVA DAS TAGS OU FAÇA FUNCIONAR)
 
   return (
     <div>
-      <Modal
-        open={open}
-        onClose={handleModalClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <h2
-            style={{
-              margin: 0,
-              fontWeight: 700,
-              fontSize: "1.5rem",
-              textAlign: "center",
-            }}
-          >
-            Editar {name}
-          </h2>
-
-          <form style={formStyle}>
-            <input
-              type="text"
-              name="nameField"
-              style={inputStyle}
-              placeholder="Nome"
-              id="nameField"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <input
-              type="text"
-              name="modelField"
-              style={inputStyle}
-              placeholder="Modelo"
-              id="modelField"
-              value={model}
-              onChange={(e) => setModel(e.target.value)}
-            />
-            <select
-              name="statusSel"
-              style={selectStyle}
-              id="statusSel"
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
+      {mode === "edit" ? (
+        <Modal
+          open={open}
+          onClose={handleModalClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <h2
+              style={{
+                margin: 0,
+                fontWeight: 700,
+                fontSize: "1.5rem",
+                textAlign: "center",
+              }}
             >
-              <option value="active">Active</option>
-              <option value="damaged">Damaged</option>
-              <option value="destroyed">Destroyed</option>
-              <option value="maintenance">Maintenance</option>
-            </select>
+              Editar {name}
+            </h2>
 
-            <input
-              type="text"
-              name="event"
-              style={inputStyle}
-              placeholder="Evento"
-              id="event"
-              value={event}
-              onChange={(e) => setEvent(e.target.value)}
-            />
+            <form style={formStyle} onSubmit={(e) => submitForm(e)}>
+              <input
+                type="text"
+                name="nameField"
+                style={inputStyle}
+                placeholder="Nome"
+                id="nameField"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required={true}
+              />
+              <input
+                type="text"
+                name="modelField"
+                style={inputStyle}
+                placeholder="Modelo"
+                id="modelField"
+                value={model}
+                onChange={(e) => setModel(e.target.value)}
+              required={true}
+              />
 
-            <input
-              type="text"
-              name="description"
-              style={inputStyle}
-              placeholder="Descrição do evento"
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-
-            <select
-              name="armorSel"
-              style={selectStyle}
-              id="armorSel"
-              value={armor}
-              onChange={(e) => setArmor(e.target.value)}
+              <select
+                name="statusSel"
+                style={selectStyle}
+                id="statusSel"
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+              >
+                <option value="active">Active</option>
+                <option value="damaged">Damaged</option>
+                <option value="destroyed">Destroyed</option>
+                <option value="maintenance">Maintenance</option>
+              </select>
+              <input
+                type="text"
+                name="event"
+                style={inputStyle}
+                placeholder="Evento"
+                id="event"
+                value={event}
+                onChange={(e) => setEvent(e.target.value)}
+              />
+              <input
+                type="text"
+                name="description"
+                style={inputStyle}
+                placeholder="Descrição do evento"
+                id="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+              <select
+                name="armorSel"
+                style={selectStyle}
+                id="armorSel"
+                value={armor}
+                onChange={(e) => setArmor(e.target.value)}
+              >
+                <option value="light">Light</option>
+                <option value="medium">Medium</option>
+                <option value="heavy">Heavy</option>
+              </select>
+              <label htmlFor="armorLvlField">
+                Nível da blindagem
+                <input
+                  type="number"
+                  name="armorLvlField"
+                  style={inputStyle}
+                  id="armorLvlField"
+                  value={armorLevel}
+                  min={0}
+                  max={100}
+                  onChange={(e) => setArmorLevel(e.target.value)}
+                />
+              </label>
+              <select
+                name="vehicleTypeSel"
+                style={selectStyle}
+                id="vehicleTypeSel"
+                value={vehicleType}
+                onChange={(e) => setVehicleType(e.target.value)}
+              >
+                <option value="tank">Tank</option>
+                <option value="car">Car</option>
+                <option value="apc">APC</option>
+                <option value="ifv">IFV</option>
+                <option value="other">Other</option>
+              </select>
+              <label htmlFor="maxSpeedField">
+                Velocidade Máxima
+                <input
+                  type="number"
+                  name="maxSpeedField"
+                  style={inputStyle}
+                  id="maxSpeedField"
+                  value={maxSpeed}
+                  min={0}
+                  onChange={(e) => setMaxSpeed(e.target.value)}
+                />
+              </label>
+              <input
+                type="submit"
+                value="Confirmar"
+                style={submitStyle}
+                onClick={submitForm}
+              />
+            </form>
+          </Box>
+        </Modal>
+      ) : (
+        <Modal
+          open={open}
+          onClose={handleModalClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <h2
+              style={{
+                margin: 0,
+                fontWeight: 700,
+                fontSize: "1.5rem",
+                textAlign: "center",
+              }}
             >
-              <option value="light">Light</option>
-              <option value="medium">Medium</option>
-              <option value="heavy">Heavy</option>
-            </select>
+              Adicionar Veiculo
+            </h2>
 
-            <input
-              type="number"
-              name="armorLvlField"
-              style={inputStyle}
-              placeholder="Nível da blindagem"
-              id="armorLvlField"
-              value={armorLevel}
-              min={0}
-              max={100}
-              onChange={(e) => setArmorLevel(e.target.value)}
-            />
-            <select
-              name="vehicleTypeSel"
-              style={selectStyle}
-              id="vehicleTypeSel"
-              value={vehicleType}
-              onChange={(e) => setVehicleType(e.target.value)}
-            >
-              <option value="tank">Tank</option>
-              <option value="car">Car</option>
-              <option value="apc">APC</option>
-              <option value="ifv">IFV</option>
-              <option value="other">Other</option>
-            </select>
+            <form style={formStyle} onSubmit={(e) => submitForm(e)}>
+              <input
+                type="text"
+                name="nameField"
+                style={inputStyle}
+                placeholder="Nome"
+                id="nameField"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required={true}
+              />
+              <input
+                type="text"
+                name="modelField"
+                style={inputStyle}
+                placeholder="Modelo"
+                id="modelField"
+                value={model}
+                onChange={(e) => setModel(e.target.value)}
+                required={true}
+              />
 
-            <input
-              type="number"
-              name="maxSpeedField"
-              style={inputStyle}
-              placeholder="Velocidade máxima"
-              id="maxSpeedField"
-              value={maxSpeed}
-              min={0}
-              onChange={(e) => setMaxSpeed(e.target.value)}
-            />
+              <select
+                name="statusSel"
+                style={selectStyle}
+                id="statusSel"
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                defaultValue={"active"}
+              >
+                <option value="active">Active</option>
+                <option value="damaged">Damaged</option>
+                <option value="destroyed">Destroyed</option>
+                <option value="maintenance">Maintenance</option>
+              </select>
 
-            <input
-              type="submit"
-              value="Confirmar"
-              style={submitStyle}
-              onClick={submitForm}
-            />
-          </form>
-        </Box>
-      </Modal>
+              <select
+                name="armorSel"
+                style={selectStyle}
+                id="armorSel"
+                value={armor}
+                onChange={(e) => setArmor(e.target.value)}
+                defaultValue={"light"}
+              >
+                <option value="light">Light</option>
+                <option value="medium">Medium</option>
+                <option value="heavy">Heavy</option>
+              </select>
+
+              <label htmlFor="armorLvlField">
+                Nível da blindagem
+                <input
+                  type="number"
+                  name="armorLvlField"
+                  style={inputStyle}
+                  placeholder="Nível da blindagem"
+                  id="armorLvlField"
+                  value={armorLevel}
+                  min={0}
+                  max={100}
+                  onChange={(e) => setArmorLevel(e.target.value)}
+                />
+              </label>
+
+              <select
+                name="vehicleTypeSel"
+                style={selectStyle}
+                id="vehicleTypeSel"
+                value={vehicleType}
+                onChange={(e) => setVehicleType(e.target.value)}
+                defaultValue={"tank"}
+              >
+                <option value="tank">Tank</option>
+                <option value="car">Car</option>
+                <option value="apc">APC</option>
+                <option value="ifv">IFV</option>
+                <option value="other">Other</option>
+              </select>
+
+              <label htmlFor="maxSpeedField">
+                Velocidade Máxima
+                <input
+                  type="number"
+                  name="maxSpeedField"
+                  style={inputStyle}
+                  placeholder="Velocidade máxima"
+                  id="maxSpeedField"
+                  value={maxSpeed}
+                  min={0}
+                  onChange={(e) => setMaxSpeed(e.target.value)}
+                />
+              </label>
+
+              <input type="submit" value="Confirmar" style={submitStyle} />
+            </form>
+          </Box>
+        </Modal>
+      )}
     </div>
   );
 }

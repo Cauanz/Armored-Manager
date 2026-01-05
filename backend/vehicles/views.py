@@ -21,15 +21,15 @@ def create(request):
     try:
       data = request.POST
       json_data = json.loads(request.body.decode('utf-8'))
-      
+
       new_tank = Vehicle.objects.create(
         name = json_data.get('name'),
         model = json_data.get('model'),
-        vehicle_type = json_data.get('vehicleType'),
+        vehicle_type = json_data.get('vehicle_type'),
         status = json_data.get('status'),
-        max_speed = json_data.get('maxSpeed'),
+        max_speed = json_data.get('max_speed'),
         armor = json_data.get('armor'),
-        armor_level = json_data.get('armorLevel'),
+        armor_level = json_data.get('armor_level'),
       )
       new_tank.save()
       
@@ -131,5 +131,5 @@ def delete_all(request):
 
 #* GET LOGS
 def get_logs(request):
-  vehicles_json = serializers.serialize("json", VehicleLog.objects.all().order_by("created_at"))
+  vehicles_json = serializers.serialize("json", VehicleLog.objects.all())
   return HttpResponse(vehicles_json)

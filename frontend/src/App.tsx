@@ -27,7 +27,9 @@ function App() {
 
   const [open, setModalOpen] = useState(false);
   const [currentVehicle, setCurrentVehicle] = useState({});
-  const handleModal = (open: boolean, vehicle: Vehicle) => {
+  const [mode, setMode] = useState(null);
+  const handleModal = (open: boolean, vehicle: Vehicle, mode) => {
+    setMode(mode)
     setModalOpen(open);
     setCurrentVehicle(vehicle);
   };
@@ -94,6 +96,7 @@ function App() {
           vehicle={currentVehicle}
           onVehicleChangedLogs={fetchLogs}
           onVehicleChanged={fetchVehicles}
+          mode={mode}
         />
 
         <div className="topContent">
@@ -110,7 +113,7 @@ function App() {
           type="button"
           value="New"
           className="newVehicleBtn"
-          onClick={() => handleModal(true, null)}
+          onClick={() => handleModal(true, null, 'new')}
         />
 
         <div className="bottomContent">
@@ -132,7 +135,7 @@ function App() {
                     <div>Max Speed: {vehicle.fields.max_speed}</div>
                     <div>Vehicle Type: {vehicle.fields.vehicle_type}</div>
                   </div>
-                  <button onClick={() => handleModal(true, vehicle)}>
+                  <button onClick={() => handleModal(true, vehicle, 'edit')}>
                     Editar
                   </button>
                 </div>

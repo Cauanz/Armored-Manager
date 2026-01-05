@@ -17,7 +17,7 @@ const logsDivStyle: React.CSSProperties = {
   borderRadius: "10px"
 };
 
-// TODO - CRIAR UMA FORMA DELE "GRUDAR" NA PARTE INFERIOR E IR SEGUINDO OS LOGS MAIS ATUAIS, TIPO UM CHAT
+// TODO - FUNCIONALIDADE DE "STICK" FUNCIONANDO, MAS OS DADOS MAIS NOVOS SEMPRE FICAM NA POSIÇÃO OPOSTA
 
 export default function LogFrame({ logs }) {
   const [logObjs, setLogObjs] = useState([]);
