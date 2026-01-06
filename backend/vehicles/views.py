@@ -13,6 +13,7 @@ def index(request):
   
   return HttpResponse(vehicles_json)
 
+# TODO - TALVEZ CRIAR ROTA PARA O GRÁFICO
 
 @csrf_exempt
 def create(request):
