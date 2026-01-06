@@ -77,6 +77,8 @@ function App() {
     }
   };
 
+
+  // TODO - ATUALIAÇÃO INSTANTANEA AO REMOVER NÃO ESTÁ FUNCIONANDO
   const handleDelete = async (id) => {
     try {
       setLoading(true);

@@ -17,7 +17,7 @@ const sizing = {
 };
 
 /**
- * 
+ *
  * DATA É ALGO ASSIM = [
  *  0: {
  *    model: "vehicles.vehicle",
@@ -37,23 +37,32 @@ const sizing = {
  * ]
  */
 
-
 // TODO - AINDA NÃO SEI COMO NADA DISSO FUNCIONA, TERMINAR, E TALVEZ ADICIONAR OUTROS GRÁFICOS JUNTO
-export default function Graph({vehicles}) {
-  
-  const [data, setData] = useState([])
+export default function Graph({ vehicles }) {
+  const [data, setData] = useState([]);
 
-const TOTAL = data.map((item) => item).reduce((a, b) => a + b, 0);
+  const statusCount = vehicles.reduce((acc, v) => {
+    const status = v.fields.status;
+    acc[status] = (acc[status] || 0) + 1;
+    return acc;
+  }, {});
 
-const getArcLabel = (params: DefaultizedPieValueType) => {
-  const percent = params.value / TOTAL;
-  return `${(percent * 100).toFixed(0)}%`;
-};
+  const pieData = Object.entries(statusCount).map(([status, count]) => ({
+    value: count,
+    label: status,
+  }));
+
+  // const TOTAL = statusCount.map((item) => item).reduce((a, b) => a + b, 0);
+
+  const getArcLabel = (params: DefaultizedPieValueType) => {
+    const percent = params.value / pieData.length;
+    return `${(percent * 100).toFixed(0)}%`;
+  };
 
   useEffect(() => {
-    setData(vehicles)
-  }, [vehicles])
-  
+    setData(vehicles);
+  }, [vehicles]);
+
   return (
     <PieChart
       series={[
