@@ -1,6 +1,7 @@
 import { DefaultizedPieValueType } from "@mui/x-charts/models";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
 import { useEffect, useState } from "react";
+import { Pie } from "react-chartjs-2";
 
 // const data = [
 //   { label: "Active", value: 400, color: "#008000" },
@@ -39,46 +40,59 @@ const sizing = {
 
 // TODO - AINDA NÃO SEI COMO NADA DISSO FUNCIONA, TERMINAR, E TALVEZ ADICIONAR OUTROS GRÁFICOS JUNTO
 export default function Graph({ vehicles }) {
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState([]);
+  const data = [
+    { value: 4, label: "destroyed" },
+    { value: 2, label: "damaged" },
+    { value: 7, label: "maintenance" },
+    { value: 2, label: "active" },
+  ];
 
-  const statusCount = vehicles.reduce((acc, v) => {
+  const count = vehicles.reduce((acc, v) => {
     const status = v.fields.status;
     acc[status] = (acc[status] || 0) + 1;
     return acc;
   }, {});
 
-  const pieData = Object.entries(statusCount).map(([status, count]) => ({
+  const pieData = Object.entries(count).map(([status, count]) => ({
     value: count,
     label: status,
   }));
 
-  // const TOTAL = statusCount.map((item) => item).reduce((a, b) => a + b, 0);
+  console.log(pieData);
+  
+
+  const TOTAL = pieData.map((item) => item.value).reduce((a, b) => a + b, 0);
+
+  console.log(TOTAL)
 
   const getArcLabel = (params: DefaultizedPieValueType) => {
-    const percent = params.value / pieData.length;
+    const percent = params.value / TOTAL;
     return `${(percent * 100).toFixed(0)}%`;
   };
 
-  useEffect(() => {
-    setData(vehicles);
-  }, [vehicles]);
+
+
+  // useEffect(() => {
+  //   setData(vehicles);
+  // }, [vehicles]);
 
   return (
     <PieChart
       series={[
         {
           outerRadius: 100,
-          data,
+          pieData,
           arcLabel: getArcLabel,
         },
       ]}
-      sx={{
-        [`& .${pieArcLabelClasses.root}`]: {
-          fill: "white",
-          fontSize: 14,
-        },
-      }}
-      {...sizing}
+      // sx={{
+      //   [`& .${pieArcLabelClasses.root}`]: {
+      //     fill: "white",
+      //     fontSize: 14,
+      //   },
+      // }}
+      // {...sizing}
     />
   );
 }
