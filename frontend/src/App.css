@@ -59,12 +59,23 @@
 
 .vehicle-item {
   width: 300px;
-  height: 160px;
+  height: 180px;
   list-style: none;
   border: 1px solid black;
   padding: 5px;
   display: flex;
   flex-direction: column;
+}
+
+.btns {
+  display: flex;
+  justify-content: center;
+}
+
+.vehicle-item button {
+  height: 30px;
+  width: 100px;
+  margin: 10px;
 }
 
 .active {
@@ -83,12 +94,16 @@
   background-color: #29a1c9;
 }
 
+.addBtn {
+  width: 5%;
+}
+
 .newVehicleBtn {
   width: 100px;
   height: 100px;
   position: absolute;
-  right: 70px;
-  bottom: 10px;
+  right: 67px;
+  bottom: 50px;
   padding: 20px;
   border-radius: 100px;
   text-align: center;

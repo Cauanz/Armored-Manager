@@ -4,7 +4,7 @@ import AltModal from "./components/AltModal";
 import LogFrame from "./components/LogFrame";
 import axios from "axios";
 import Graph from "./components/Graph";
-interface Vehicle {
+export interface Vehicle {
   pk: number;
   model: string;
   fields: {
@@ -21,7 +21,7 @@ interface Vehicle {
 }
 
 function App() {
-  const [vehicles, setVehicles] = useState([]);
+  const [vehicles, setVehicles] = useState<Array<Vehicle>>([]);
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -35,7 +35,6 @@ function App() {
     setCurrentVehicle(vehicle);
   };
   const handleModalClose = () => setModalOpen(false);
-
 
   const fetchLogs = async () => {
     try {
@@ -77,9 +76,8 @@ function App() {
     }
   };
 
-
-  // TODO - ATUALIAÇÃO INSTANTANEA AO REMOVER NÃO ESTÁ FUNCIONANDO
-  const handleDelete = async (id) => {
+  // TODO - ATUALIAÇÃO INSTANTANEA AO REMOVER NÃO ESTÁ FUNCIONANDO, CONSERTAR
+  const handleDelete = async (id: number) => {
     try {
       setLoading(true);
       const res = axios.delete(`http://localhost:8000/vehicles/delete/${id}/`);
@@ -133,13 +131,6 @@ function App() {
           </div>
         </div>
 
-        <input
-          type="button"
-          value="New"
-          className="newVehicleBtn"
-          onClick={() => handleModal(true, null, "new")}
-        />
-
         <div className="bottomContent">
           <div className="table">
             {vehicles ? (
@@ -159,17 +150,28 @@ function App() {
                     <div>Max Speed: {vehicle.fields.max_speed}</div>
                     <div>Vehicle Type: {vehicle.fields.vehicle_type}</div>
                   </div>
-                  <button onClick={() => handleModal(true, vehicle, "edit")}>
-                    Editar
-                  </button>
-                  <button onClick={() => handleDelete(vehicle.pk)}>
-                    Deletar
-                  </button>
+
+                  <div className="btns">
+                    <button onClick={() => handleModal(true, vehicle, "edit")}>
+                      Editar
+                    </button>
+                    <button onClick={() => handleDelete(vehicle.pk)}>
+                      Deletar
+                    </button>
+                  </div>
                 </div>
               ))
             ) : (
               <h1>No vehicles were found!</h1>
             )}
+          </div>
+          <div className="addBtn">
+            <input
+              type="button"
+              value="New"
+              className="newVehicleBtn"
+              onClick={() => handleModal(true, null, "new")}
+            />
           </div>
         </div>
       </div>

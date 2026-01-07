@@ -72,7 +72,7 @@ interface ModalProps {
   };
   open: boolean;
   handleModalClose: () => void;
-  mode: string
+  mode: string | null
 }
 
 export default function AltModal({
