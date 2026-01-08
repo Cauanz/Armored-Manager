@@ -20,9 +20,23 @@ export interface Vehicle {
   };
 }
 
+export interface Log {
+  fields: {
+    event: string;
+    event_description: string;
+    new_status: string;
+    old_status: string;
+    vehicle: number;
+    description: string;
+    created_at: string;
+  };
+  model: string;
+  pk: number;
+}
+
 function App() {
   const [vehicles, setVehicles] = useState<Array<Vehicle>>([]);
-  const [logs, setLogs] = useState([]);
+  const [logs, setLogs] = useState<Array<Log>>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -76,7 +90,9 @@ function App() {
     }
   };
 
+
   // TODO - ATUALIAÇÃO INSTANTANEA AO REMOVER NÃO ESTÁ FUNCIONANDO, CONSERTAR
+  // TODO - E FAZER PEQUENAS CORREÇÕES E ENCERRAR PROJETO
   const handleDelete = async (id: number) => {
     try {
       setLoading(true);

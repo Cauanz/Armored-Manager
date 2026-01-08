@@ -2,12 +2,26 @@ import { DefaultizedPieValueType } from "@mui/x-charts/models";
 import { PieChart } from "@mui/x-charts/PieChart";
 import { useEffect, useState } from "react";
 import type { Vehicle } from "../App";
+import { BarChart } from "@mui/x-charts";
 
 const sizing = {
   margin: { right: 5 },
   width: 200,
   height: 200,
 };
+
+const graphDivStyle: React.CSSProperties = {
+  width: "100%",
+  height: "100%",
+  backgroundColor: "gray",
+  display: "flex",
+  justifyContent: "center",
+  alignContent: "center"
+};
+
+interface VehiclesProps {
+  vehicles: Vehicle[]
+}
 
 /**
  * DATA É ALGO ASSIM = [
@@ -29,8 +43,7 @@ const sizing = {
  * ]
  */
 
-// TODO - MELHORAR OS GRÁFICOS (E ESTILO)
-export default function Graph({ vehicles }) {
+export default function Graph({ vehicles }: VehiclesProps) {
   const [vehicleData, setVehicleData] = useState<Array<Vehicle>>([]);
 
   const count = vehicleData.reduce((acc, v) => {
@@ -45,6 +58,8 @@ export default function Graph({ vehicles }) {
     label: status,
   }));
 
+  const barData: number[] = Object.values(count);
+
   const TOTAL = pieData.map((item) => item.value).reduce((a, b) => a + b, 0);
 
   const getArcLabel = (params: DefaultizedPieValueType) => {
@@ -57,15 +72,26 @@ export default function Graph({ vehicles }) {
   }, [vehicles]);
 
   return (
-    <PieChart
-      series={[
-        {
-          outerRadius: 100,
-          data: pieData,
-          arcLabel: getArcLabel,
-        },
-      ]}
-      {...sizing}
-    />
+    <>
+      <div className="graphContainer" style={graphDivStyle}>
+        <PieChart
+          series={[
+            {
+              outerRadius: 100,
+              data: pieData,
+              arcLabel: getArcLabel,
+            },
+          ]}
+          {...sizing}
+        />
+
+        <BarChart
+          xAxis={[{ data: ["Active", "Destroyed", "Damaged", "Maintenance"] }]}
+          series={[{ data: barData }]}
+          height={200}
+          width={600}
+        />
+      </div>
+    </>
   );
 }

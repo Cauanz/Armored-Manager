@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import type { Log } from "../App";
 
 const frameStyle: React.CSSProperties = {
   height: "100%",
@@ -17,10 +18,15 @@ const logsDivStyle: React.CSSProperties = {
   borderRadius: "10px"
 };
 
+interface LogFrameProps {
+  logs: Log[]
+}
+
+
 // TODO - FUNCIONALIDADE DE "STICK" FUNCIONANDO, MAS OS DADOS MAIS NOVOS SEMPRE FICAM NA POSIÇÃO OPOSTA
 
-export default function LogFrame({ logs }) {
-  const [logObjs, setLogObjs] = useState([]);
+export default function LogFrame({ logs }: LogFrameProps) {
+  const [logObjs, setLogObjs] = useState<Array<Log>>([]);
 
   useEffect(() => {
     setLogObjs(logs || []);
@@ -29,8 +35,8 @@ export default function LogFrame({ logs }) {
   return (
     <>
       <div className="frame" style={frameStyle}>
-        {logs ? (
-          logs.map((log) => (
+        {logObjs ? (
+          logObjs.map((log) => (
             <div className="log" style={logsDivStyle} key={log.pk}>
               <p>Description: {log.fields.description}</p>
               <p>Event: {log.fields.event}</p>
