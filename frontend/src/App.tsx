@@ -90,8 +90,6 @@ function App() {
     }
   };
 
-
-  // TODO - ATUALIAÇÃO INSTANTANEA AO REMOVER NÃO ESTÁ FUNCIONANDO, CONSERTAR
   // TODO - E FAZER PEQUENAS CORREÇÕES E ENCERRAR PROJETO
   const handleDelete = async (id: number) => {
     try {
@@ -104,11 +102,11 @@ function App() {
 
       setError(null);
       setLoading(false);
-      fetchLogs();
-      fetchVehicles();
     } catch (error) {
       setError(error.message);
     } finally {
+      await fetchLogs();
+      await fetchVehicles();
       setLoading(false);
     }
   };

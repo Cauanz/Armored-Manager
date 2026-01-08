@@ -50,9 +50,9 @@
 
 .table {
   height: 30rem;
-  width: 90%;
+  width: 100%;
   display: grid;
-  grid-template-columns: auto auto auto auto auto;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   padding: 10px;
   overflow: scroll;
 }
@@ -99,13 +99,13 @@
 }
 
 .newVehicleBtn {
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   position: absolute;
-  right: 67px;
+  right: 15px;
   bottom: 50px;
   padding: 20px;
-  border-radius: 100px;
+  border-radius: 80px;
   text-align: center;
   cursor: pointer;
 }
