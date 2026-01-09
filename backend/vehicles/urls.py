@@ -11,6 +11,7 @@ urlpatterns = [
     path('delete/<int:id>/', views.delete_by_id, name="delete_by_id"),
     path('delete/', views.delete_all, name="delete_all"),
     path('logs/', views.get_logs, name="get_logs"),
+    path('log/<int:id>/', views.get_log_by_id, name="get_log_by_id"),
 ]
 
 

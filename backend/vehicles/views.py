@@ -71,7 +71,7 @@ def update(request, id):
       Vehicle.objects.filter(pk=id).update(updated_at=timezone.now())
       
       # TODO - MELHORAR ISSO PARA DETECTAR OQUE FOI MUDADO (PORQUE NEM SEMPRE É O STATUS)
-      description = f"Status changed from {old_status} to {json_data['fields'].get("status")}"
+      description = f"Status changed from {old_status} to {json_data['fields'].get("status")} on vehicle {vehicle.name}"
       
       updated_log = VehicleLog.objects.filter(vehicle=vehicle).create(
         vehicle = vehicle,
@@ -106,6 +106,17 @@ def delete_by_id(request, id):
       vehicle = Vehicle.objects.get(pk=id)
       
       if vehicle:
+                
+
+# TODO - ADICIONAR LOG QUANDO O VEICULO FOR REMOVIDO (PROBLEMA: CADA LOG É ASSOCIADO AO OBJ DO VEICULO, OU SEJA, SEM VEICULO, SEM LOG)
+        # description = f"Vehicle {vehicle.get("name")} removed."
+        # updated_log = VehicleLog.objects.create(
+        #   vehicle = vehicle,
+        #   description = description,
+        #   old_status = None,
+        #   new_status = vehicle.get('status')
+        # )
+        
         vehicle.delete()
         return HttpResponse(content="Done.", status=200)
     except:
@@ -132,5 +143,13 @@ def delete_all(request):
 
 #* GET LOGS
 def get_logs(request):
-  vehicles_json = serializers.serialize("json", VehicleLog.objects.all())
+  vehicles_json = serializers.serialize("json", VehicleLog.objects.order_by("-created_at").all())
   return HttpResponse(vehicles_json)
+
+def get_log_by_id(request, id):
+  
+  if request.method == "GET":
+    
+    vehicle_log = VehicleLog.objects.get(vehicle=id)
+    
+  return HttpResponse(content=vehicle_log, status=200)

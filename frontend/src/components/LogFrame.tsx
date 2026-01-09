@@ -22,9 +22,6 @@ interface LogFrameProps {
   logs: Log[]
 }
 
-
-// TODO - FUNCIONALIDADE DE "STICK" FUNCIONANDO, MAS OS DADOS MAIS NOVOS SEMPRE FICAM NA POSIÇÃO OPOSTA
-
 export default function LogFrame({ logs }: LogFrameProps) {
   const [logObjs, setLogObjs] = useState<Array<Log>>([]);
 
